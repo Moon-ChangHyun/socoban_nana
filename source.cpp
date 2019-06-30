@@ -38,10 +38,10 @@ int WinMain(HINSTANCE hInstance, HINSTANCE preInstance, LPSTR lpCmdLine, int nCm
 					line.push_back(buffer[i] & 0xF);
 					buffer[i++] = 0;
 				}
-				map.push_back(line);
+				map.push_back(move(line));
 				buffer[0] = 0;
 			}
-			board::sMap.push_back(map);
+			board::sMap.push_back(move(map));
 			buffer[0] = 0;
 		}
 	}
