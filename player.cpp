@@ -63,7 +63,7 @@ bool player::move(dir dir)
 	return false;
 }
 
-bool player::_undo(stack& src, stack& dst)
+bool player::_undo(std::pair<dir, bool>& src, std::pair<dir, bool>& dst)
 {
 	if (mpBoard == nullptr) return false;
 	if (src.empty()) return false;
