@@ -16,7 +16,6 @@ private:
 	player(void);
 	virtual ~player() = default;
 	bool _undo();
-	bool _redo();
 protected:
 	unsigned int mXpos, mYpos;
 	unsigned int mMoveCount;
@@ -36,4 +35,3 @@ public:
 	bool reset();
 	bool isClear() noexcept;
 };
-
