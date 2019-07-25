@@ -15,7 +15,7 @@ class player
 private:
 	player(void);
 	virtual ~player() = default;
-	bool _undo();
+	bool _undo(std::stack<std::pair<dir, bool>>&, std::stack<std::pair<dir, bool>>&);
 protected:
 	unsigned int mXpos, mYpos;
 	unsigned int mMoveCount;
