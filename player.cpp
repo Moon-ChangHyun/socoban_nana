@@ -2,6 +2,8 @@
 #include <iostream>
 using namespace std;
 
+const std::array<nana::point, 4> player::deflection = { {{-1, 0}, {1, 0}, {0, -1}, {0, 1}} };
+
 player::player() : mXpos(0), mYpos(0), mMoveCount(0), mLevel(-1), mpBoard(nullptr) {}
 
 player& player::instance()
@@ -10,7 +12,8 @@ player& player::instance()
 	return sInstance;
 }
 
-void player::setLevel(unsigned int inLevel) {
+void player::setLevel(unsigned int inLevel)
+{
 	if (mLevel != inLevel) {
 		mLevel = inLevel;
 		setBoard();
@@ -40,7 +43,6 @@ unsigned int player::getMoveCount() const noexcept
 bool player::move(dir dir)
 {
 	if (mpBoard == nullptr) return false;
-	array<nana::point, 4> deflection = { {{-1, 0}, {1, 0}, {0, -1}, {0, 1}} };
 	int dx = deflection[dir].x;
 	int dy = deflection[dir].y;
 	if (!mpBoard->isThereWall(mXpos + dx, mYpos + dy)) {
@@ -69,7 +71,6 @@ bool player::_undo()
 	if (mBehaviorBackwardStack.empty()) return false;
 	const pair<dir, bool> behavior = mBehaviorBackwardStack.top();
 	mBehaviorBackwardStack.pop();
-	array<nana::point, 4> deflection = { {{-1, 0}, {1, 0}, {0, -1}, {0, 1}} };
 	int dx = deflection[behavior.first].x;
 	int dy = deflection[behavior.first].y;
 	mpBoard->movePlayer(mXpos, mYpos, -dx, -dy);
@@ -96,7 +97,6 @@ bool player::_redo()
 	if (mBehaviorForwardStack.empty()) return false;
 	const pair<dir, bool> behavior = mBehaviorForwardStack.top();
 	mBehaviorForwardStack.pop();
-	array<nana::point, 4> deflection = { {{-1, 0}, {1, 0}, {0, -1}, {0, 1}} };
 	int dx = deflection[behavior.first].x;
 	int dy = deflection[behavior.first].y;
 	if (behavior.second) {

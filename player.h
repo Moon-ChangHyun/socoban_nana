@@ -1,5 +1,6 @@
 #pragma once
 #include <stack>
+#include <array>
 #include <memory>
 #include "board.h"
 
@@ -13,10 +14,11 @@ typedef enum Direction {
 class player
 {
 private:
-	player(void);
+	player();
 	virtual ~player() = default;
 	bool _undo();
 	bool _redo();
+	static const std::array<nana::point, 4> deflection;
 protected:
 	unsigned int mXpos, mYpos;
 	unsigned int mMoveCount;
