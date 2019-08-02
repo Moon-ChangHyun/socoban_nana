@@ -99,22 +99,22 @@ int WinMain(HINSTANCE hInstance, HINSTANCE preInstance, LPSTR lpCmdLine, int nCm
 	p.setLevel(0);
 
 	pprevBtn.events().click([&](const nana::arg_click& click) {
-		p.setLevel(max(p.getLevel() - 10, 0));
+		p.setLevel(max((int)p.getLevel() - 10, 0));
 		lbLevelNum.caption("<bold size=10>"s + std::to_string(p.getLevel()) + "</>"s);
 		lbCntNum.caption("<bold size=10>"s + std::to_string(p.getMoveCount()) + "</>"s);
 	});
 	prevBtn.events().click([&](const nana::arg_click& click) {
-		p.setLevel(max(p.getLevel() - 1, 0));
+		p.setLevel(max((int)p.getLevel() - 1, 0));
 		lbLevelNum.caption("<bold size=10>"s + std::to_string(p.getLevel()) + "</>"s);
 		lbCntNum.caption("<bold size=10>"s + std::to_string(p.getMoveCount()) + "</>"s);
 	});
 	nextBtn.events().click([&](const nana::arg_click& click) {
-		p.setLevel(min(p.getLevel() + 1, stageNumber - 1));
+		p.setLevel(min((int)p.getLevel() + 1, stageNumber - 1));
 		lbLevelNum.caption("<bold size=10>"s + std::to_string(p.getLevel()) + "</>"s);
 		lbCntNum.caption("<bold size=10>"s + std::to_string(p.getMoveCount()) + "</>"s);
 	});
 	nnextBtn.events().click([&](const nana::arg_click& click) {
-		p.setLevel(min(p.getLevel() + 10, stageNumber - 1));
+		p.setLevel(min((int)p.getLevel() + 10, stageNumber - 1));
 		lbLevelNum.caption("<bold size=10>"s + std::to_string(p.getLevel()) + "</>"s);
 		lbCntNum.caption("<bold size=10>"s + std::to_string(p.getMoveCount()) + "</>"s);
 	});
