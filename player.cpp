@@ -63,12 +63,12 @@ bool player::move(dir dir)
 	return false;
 }
 
-bool player::_undo(stack<pair<dir, bool>>& src, stack<pair<dir, bool>>& dst)
+bool player::_undo()
 {
 	if (mpBoard == nullptr) return false;
-	if (src.empty()) return false;
-	const pair<dir, bool> behavior = src.top();
-	src.pop();
+	if (mBehaviorBackwardStack.empty()) return false;
+	const pair<dir, bool> behavior = mBehaviorBackwardStack.top();
+	mBehaviorBackwardStack.pop();
 	array<nana::point, 4> deflection = { {{-1, 0}, {1, 0}, {0, -1}, {0, 1}} };
 	int dx = deflection[behavior.first].x;
 	int dy = deflection[behavior.first].y;
@@ -78,21 +78,41 @@ bool player::_undo(stack<pair<dir, bool>>& src, stack<pair<dir, bool>>& dst)
 	}
 	mXpos -= dx;
 	mYpos -= dy;
-	dst.push(behavior);
+	mBehaviorForwardStack.push(behavior);
 	--mMoveCount;
 	return true;
 }
 
 bool player::undo()
 {
-	bool ret = _undo(mBehaviorBackwardStack, mBehaviorForwardStack);
+	bool ret = _undo();
 	if (ret) board::sDrawing->update();
 	return ret;
 }
 
+bool player::_redo()
+{
+	if (mpBoard == nullptr) return false;
+	if (mBehaviorForwardStack.empty()) return false;
+	const pair<dir, bool> behavior = mBehaviorForwardStack.top();
+	mBehaviorForwardStack.pop();
+	array<nana::point, 4> deflection = { {{-1, 0}, {1, 0}, {0, -1}, {0, 1}} };
+	int dx = deflection[behavior.first].x;
+	int dy = deflection[behavior.first].y;
+	if (behavior.second) {
+		mpBoard->moveStone(mXpos + dx, mYpos + dy, dx, dy);
+	}
+	mpBoard->movePlayer(mXpos, mYpos, dx, dy);
+	mXpos += dx;
+	mYpos += dy;
+	mBehaviorBackwardStack.push(behavior);
+	++mMoveCount;
+	return true;
+}
+
 bool player::redo()
 {
-	bool ret = _undo(mBehaviorForwardStack, mBehaviorBackwardStack);
+	bool ret = _redo();
 	if (ret) board::sDrawing->update();
 	return ret;
 }
@@ -101,7 +121,7 @@ bool player::reset()
 {
 	if (mpBoard == nullptr) return false;
 	if (mBehaviorBackwardStack.empty() && mBehaviorForwardStack.empty()) return false;
-	while (_undo(mBehaviorBackwardStack, mBehaviorForwardStack));
+	while (_undo());
 	while (!mBehaviorForwardStack.empty()) mBehaviorForwardStack.pop();
 	board::sDrawing->update();
 	return true;
